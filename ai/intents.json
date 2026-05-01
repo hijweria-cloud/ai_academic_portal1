@@ -1,0 +1,84 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hey", "Hello", "Good morning", "Good evening"],
+      "responses": ["Hello! How can I assist you today?", "Hi there! What can I do for you?"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "See you later", "Goodbye", "I have to go"],
+      "responses": ["Goodbye! Have a nice day!", "See you soon!"]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thanks a lot"],
+      "responses": ["You're welcome!", "No problem!", "Happy to help!"]
+    },
+    {
+      "tag": "portal_info",
+      "patterns": [
+        "What is this website about?",
+        "Tell me about this portal",
+        "What does the academic portal do?",
+        "Purpose of this site"
+      ],
+      "responses": [
+        "This is an AI-Based Academic Portal designed for BS-level students to view results, subjects, and semester details.",
+        "The portal helps students and admins manage academic data efficiently with AI assistance."
+      ]
+    },
+    {
+      "tag": "result_query",
+      "patterns": [
+        "How can I check my marks?",
+        "Show my results",
+        "Where can I see my grades?",
+        "How to view my semester result?"
+      ],
+      "responses": [
+        "Go to your dashboard and select your semester to view marks and grades.",
+        "Click on your program and semester card to view your results and percentage."
+      ]
+    },
+    {
+      "tag": "admin_help",
+      "patterns": [
+        "I am admin",
+        "How can admin update data?",
+        "Can admin change marks?",
+        "Admin access"
+      ],
+      "responses": [
+        "Admins can edit student data and marks through the Admin Panel using their login credentials.",
+        "If you are an admin, log in and navigate to 'Manage Students' or 'Manage Marks' to update records."
+      ]
+    },
+    {
+      "tag": "motivation",
+      "patterns": [
+        "I am tired",
+        "I am stressed",
+        "I feel demotivated",
+        "I can’t study"
+      ],
+      "responses": [
+        "Take a short break and come back stronger — you’ve got this! 💪",
+        "Don’t give up, you’re doing great. Every small step counts!",
+        "Remember why you started — success takes effort and patience."
+      ]
+    },
+    {
+      "tag": "ai_features",
+      "patterns": [
+        "How does AI work here?",
+        "What AI features are in this portal?",
+        "How do you use AI?"
+      ],
+      "responses": [
+        "This portal uses AI for chat assistance, result prediction, and automated warnings.",
+        "AI helps analyze student data and interact through this chatbot."
+      ]
+    }
+  ]
+}
