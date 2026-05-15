@@ -5,23 +5,34 @@ import json
 import re
 import base64
 import os
+from dotenv import load_dotenv
+
+# .env file se keys load karne ke liye
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)  # allow frontend access
 
-# Gemini API Key
-API_KEY = "AIzaSyBDkJD9b_30-AlxlRrVXvdgsyCNiH04Jak"
+# --- FIX 1: Gemini API Key (Code se hata kar .env se uthayi hai) ---
+API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not API_KEY:
+    # Agar key na mile toh system error dikhaye ga
+    print("CRITICAL ERROR: GEMINI_API_KEY not found in .env file.")
 
 # Gemini client init
 client = genai.Client(api_key=API_KEY)
 
-# upload folder path
-UPLOAD_FOLDER = "uploads"
+# --- FIX 2: General Upload Path for Portability ---
+# __file__ use kiya hai taake examiner ke computer par rasta khud dhoond le
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 # loading intents
-with open("intents.json", "r", encoding="utf-8") as f:
+intents_path = os.path.join(BASE_DIR, "intents.json")
+with open(intents_path, "r", encoding="utf-8") as f:
     intents = json.load(f)
 
 
@@ -37,7 +48,7 @@ def get_intent_response(user_message):
 # if no intent matches, call gemini
 def get_gemini_response(user_message):
     try:
-        # this tells gemini to act only as assistant for our academic portal
+        # --- Prompt Engineering (Describes the module as an academic counselor) ---
         prompt = f"""
 You are an AI assistant for the "AI Academic Portal".
 
@@ -67,16 +78,12 @@ User message: {user_message}
         """
 
         response = client.models.generate_content(
-            model="models/gemini-2.5-flash",
+            model="gemini-1.5-flash", # Updated to a stable model version
             contents=[prompt]
         )
 
         if hasattr(response, "text"):
             return response.text.strip()
-        elif hasattr(response, "candidates") and response.candidates:
-            parts = response.candidates[0].content.parts
-            if parts and hasattr(parts[0], "text"):
-                return parts[0].text.strip()
         return "⚠️ No valid reply from Gemini."
     except Exception as e:
         return f"⚠️ Error contacting Gemini: {str(e)}"
@@ -99,12 +106,10 @@ def upload_file():
                 image_data = base64.b64encode(img_file.read()).decode("utf-8")
 
             response = client.models.generate_content(
-                model="models/gemini-2.5-flash-image",
+                model="gemini-1.5-flash", # Use multimodal capable model
                 contents=[
-                    {"role": "user", "parts": [
-                        {"text": "Explain the content of this image in context of academics."},
-                        {"inline_data": {"mime_type": "image/jpeg", "data": image_data}}
-                    ]}
+                    "Explain the content of this image in context of academics.",
+                    {"inline_data": {"mime_type": "image/jpeg", "data": image_data}}
                 ]
             )
 
@@ -137,4 +142,6 @@ def chat():
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    # --- FIX 3: Secure Deployment ---
+    # Debug mode production mein false hona chahiye, aur host specify karna behtar hai
+    app.run(host="127.0.0.1", port=5000, debug=False)

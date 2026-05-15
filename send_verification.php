@@ -16,21 +16,28 @@ function sendVerificationEmail($email, $token, $name) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
 
-        // Your Gmail & App Password
-        $mail->Username   = 'hijweria@gmail.com';
-        $mail->Password   = 'vmyx veom gdhr nine'; // Your app password
+        // --- FIX 1: Secrets (Code se hata kar environment variables se uthaye hain) ---
+        // PHP mein .env use karne ke liye getenv() function istemal hota hai
+        $mail->Username   = getenv('GMAIL_USER'); 
+        $mail->Password   = getenv('GMAIL_APP_PASSWORD'); 
+        
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
         // Recipients
-        $mail->setFrom('hijweria@gmail.com', 'AI Academic Portal');
+        $mail->setFrom(getenv('GMAIL_USER'), 'AI Academic Portal');
         $mail->addAddress($email);
 
         // Content
         $mail->isHTML(true);
         $mail->Subject = 'Verify Your Email - AI Academic Portal';
 
-        $verify_link = "http://localhost/ai_academic_portal/verify.php?token=$token";
+        // --- FIX 2: Dynamic Verification Link ---
+        // Hard-coded localhost hata kar dynamic banaya hai taake har system par chalay
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+        $host = $_SERVER['HTTP_HOST'];
+        $base_url = "$protocol://$host/ai_academic_portal";
+        $verify_link = "$base_url/verify.php?token=$token";
 
         $mail->Body = "
             <h3>Hello $name,</h3>
@@ -45,6 +52,8 @@ function sendVerificationEmail($email, $token, $name) {
         return true;
 
     } catch (Exception $e) {
+        // Error logging for debugging
+        error_log("Mailer Error: " . $mail->ErrorInfo);
         return false;
     }
 }

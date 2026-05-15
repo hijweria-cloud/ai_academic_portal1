@@ -10,13 +10,18 @@ if (!isset($_SESSION['student_id'])) {
 
 $student_id = $_SESSION['student_id'];
 
-// Database se G1 aur Absences auto-fetch karna
+// --- FETCH DATA FROM DATABASE ---
+// Auto-fetching G1 and Absences for the logged-in student
 $sql = "SELECT mid_obtained, absences FROM marks 
-        WHERE student_id = '$student_id' 
+        WHERE student_id = ? 
         ORDER BY id DESC LIMIT 1";
-$res = mysqli_query($conn, $sql);
-$db_data = mysqli_fetch_assoc($res);
+$stmt_db = $conn->prepare($sql);
+$stmt_db->bind_param("i", $student_id);
+$stmt_db->execute();
+$res = $stmt_db->get_result();
+$db_data = $res->fetch_assoc();
 
+// Default values set karna agar database empty ho
 $default_g1 = $db_data['mid_obtained'] ?? 0;
 $default_absences = $db_data['absences'] ?? 0;
 
@@ -24,25 +29,26 @@ $prediction_data = null;
 $debug_error = ""; 
 
 if (isset($_POST['predict_now'])) {
-    $python = 'D:\Users\JAVERIA\AppData\Local\Programs\Python\Python310\python.exe';
-    $script = 'D:\xampp\htdocs\ai_academic_portal - Copy\ai\predictor.py';
+    // Portable paths for Python execution
+    $python = 'python'; 
+    $script = __DIR__ . '/ai/predictor.py'; 
     
-    // Inputs ko sanitize karna
+    // Inputs sanitation
     $g1 = escapeshellarg($_POST['g1']);
     $g2 = escapeshellarg($_POST['g2']);
     $study = escapeshellarg($_POST['studytime']);
     $fail = escapeshellarg($_POST['failures']);
     $abs = escapeshellarg($_POST['absences']);
 
-    // Python execute karna
+    // Execute Python script and capture output
     $command = "\"$python\" \"$script\" $g1 $g2 $study $fail $abs 2>&1";
     $output = shell_exec($command);
     
-    // Result decode karna
+    // Decode JSON result from Python
     $prediction_data = json_decode($output, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
-        $debug_error = $output; // Agar JSON ghalat hai to error save karna
+        $debug_error = $output; 
     }
 }
 ?>
@@ -60,6 +66,7 @@ if (isset($_POST['predict_now'])) {
         .btn-custom { background-color: #D4AF37; color: #1C1C1C; font-weight: 600; border: none; padding: 10px 20px; border-radius: 8px; transition: 0.3s; }
         .btn-custom:hover { background-color: #B9962F; color: #fff; transform: translateY(-2px); }
         .result-box { background: #fff; border-left: 8px solid #D4AF37; border-radius: 15px; padding: 30px; min-height: 350px; }
+        .weak-area-box { background-color: #FFF3CD; border: 1px solid #FFEEBA; color: #856404; padding: 15px; border-radius: 10px; margin-top: 20px; }
         footer { flex-shrink: 0; }
     </style>
 </head>
@@ -125,8 +132,20 @@ if (isset($_POST['predict_now'])) {
                         </div>
                         
                         <p class="mb-0"><strong>Status:</strong> Decision Tree Analysis Complete.</p>
-                        <hr>
-                        <p class="small text-muted">This AI forecast helps in identifying weak performance areas early.</p>
+                        
+                        <?php if (isset($prediction_data['weak_subjects']) && $prediction_data['weak_subjects'][0] !== "None identified"): ?>
+                            <div class="weak-area-box">
+                                <strong>⚠️ Weak Areas Identified:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <?php foreach ($prediction_data['weak_subjects'] as $area): ?>
+                                        <li><?= htmlspecialchars($area) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php else: ?>
+                            <hr>
+                            <p class="small text-success"><strong>Steady Performance:</strong> No major weak areas detected by AI.</p>
+                        <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <div class="card p-5 text-center text-muted d-flex align-items-center justify-content-center" style="min-height: 350px;">
