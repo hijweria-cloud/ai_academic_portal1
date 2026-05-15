@@ -124,7 +124,7 @@
   </div>
 
   <!-- Footer -->
-  <footer>&copy; 2025 Aspire College | AI-Based Academic Portal</footer>
+  <footer>&copy; 2025 GC University Faisalabad | AI-Based Academic Portal</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -1,93 +1,40 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// 1. Session aur Database connection sab se upar
+session_start();
+include('includes/db_connect.php'); 
 include('includes/header.php');
 
-// Get semester number from URL
-$semester = isset($_GET['semester']) ? $_GET['semester'] : 1;
+// 2. SECURITY FIX: Semester ko integer mein badalna (Reflected XSS se bachne ke liye)
+$semester = isset($_GET['semester']) ? (int)$_GET['semester'] : 1;
+$student_id = isset($_SESSION['student_id']) ? $_SESSION['student_id'] : 0;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Semester <?php echo $semester; ?> Subjects | AI Academic Portal</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Semester <?php echo htmlspecialchars($semester); ?> Subjects | GC University Faisalabad</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    /* === Sticky Footer Logic === */
-    html, body {
-      height: 100%;
-      margin: 0;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      font-family: 'Poppins', sans-serif;
-      background-color: #FAF3E0;
-      color: #1C1C1C;
-    }
-
-    /* Is class se content area baki bachi hui jagah le lega aur footer ko niche push kar dega */
-    .content-wrapper {
-      flex: 1 0 auto;
-    }
-
+    html, body { height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; font-family: 'Poppins', sans-serif; background-color: #FAF3E0; color: #1C1C1C; }
+    .content-wrapper { flex: 1 0 auto; }
     h1 { color: #B8860B; font-weight: 700; }
-    .text-muted { color: #333 !important; font-weight: 500; }
-
-    .card {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(180, 140, 20, 0.2);
-    }
-
-    .table thead {
-      background-color: #1C1C1C;
-      color: #D4AF37;
-    }
-
-    .badge {
-      background-color: #D4AF37 !important;
-      color: #1C1C1C !important;
-      font-weight: 600;
-    }
-
-    .btn-custom {
-      background-color: #D4AF37;
-      color: #1C1C1C;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-
-    .btn-custom:hover {
-      background-color: #B9962F;
-      color: #fff;
-    }
-
-    /* Footer fix */
-    footer {
-      flex-shrink: 0;
-      background-color: #1C1C1C !important;
-      color: #F5EBDD !important;
-      padding: 20px 0;
-      width: 100%;
-    }
+    .card { background: #fff; border-radius: 15px; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); border: 1px solid rgba(180, 140, 20, 0.2); }
+    .table thead { background-color: #1C1C1C; color: #D4AF37; }
+    .badge { background-color: #D4AF37 !important; color: #1C1C1C !important; font-weight: 600; }
+    .btn-custom { background-color: #D4AF37; color: #1C1C1C; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 500; transition: 0.3s; }
+    .btn-custom:hover { background-color: #B9962F; color: #fff; }
   </style>
 </head>
 
 <body>
-  <!-- Content Wrapper Start -->
   <div class="content-wrapper">
     <div class="container my-5">
       <div class="text-center mb-5">
-        <h1 class="fw-bold">Semester <?php echo $semester; ?> Subjects</h1>
-        <p class="text-muted">View your subject marks, assignments, and presentation results below.</p>
+        <h1 class="fw-bold">Semester <?php echo htmlspecialchars($semester); ?> Performance</h1>
+        <p class="text-muted">Academic records verified and fetched from the university database.</p>
       </div>
 
       <div class="card p-4">
@@ -99,44 +46,50 @@ $semester = isset($_GET['semester']) ? $_GET['semester'] : 1;
                 <th colspan="2">Mid-Term</th>
                 <th colspan="2">Assignments</th>
                 <th colspan="2">Presentations</th>
-                <th>Total %</th>
+                <th>Overall</th>
               </tr>
               <tr>
                 <th></th>
-                <th>Total</th>
-                <th>Obtained</th>
-                <th>Total</th>
-                <th>Obtained</th>
-                <th>Total</th>
-                <th>Obtained</th>
-                <th></th>
+                <th>Total</th><th>Obt.</th>
+                <th>Total</th><th>Obt.</th>
+                <th>Total</th><th>Obt.</th>
+                <th>%</th>
               </tr>
             </thead>
             <tbody class="text-center">
               <?php
-              $subjects = [
-                ["Artificial Intelligence", 30, 25, 10, 8, 10, 9],
-                ["Database Systems", 30, 27, 10, 9, 10, 8],
-                ["Data Structures", 30, 24, 10, 7, 10, 9],
-                ["Operating Systems", 30, 26, 10, 8, 10, 9],
-              ];
+              // 3. DATABASE FETCH: Hard-coded array khatam, ab asli data aayega
+              $sql = "SELECT subject_name, mid_total, mid_obtained, assignment_total, assignment_obtained, presentation_total, presentation_obtained FROM marks WHERE student_id = ? AND semester = ?";
+              $stmt = $conn->prepare($sql);
+              
+              if ($stmt) {
+                  $stmt->bind_param("ii", $student_id, $semester);
+                  $stmt->execute();
+                  $result = $stmt->get_result();
 
-              foreach ($subjects as $subject) {
-                $total = $subject[1] + $subject[3] + $subject[5];
-                $obtained = $subject[2] + $subject[4] + $subject[6];
-                $percentage = round(($obtained / $total) * 100, 2);
-
-                echo "
-                <tr>
-                  <td><strong>{$subject[0]}</strong></td>
-                  <td>{$subject[1]}</td>
-                  <td>{$subject[2]}</td>
-                  <td>{$subject[3]}</td>
-                  <td>{$subject[4]}</td>
-                  <td>{$subject[5]}</td>
-                  <td>{$subject[6]}</td>
-                  <td><span class='badge'>{$percentage}%</span></td>
-                </tr>";
+                  if ($result->num_rows > 0) {
+                      while ($row = $result->fetch_assoc()) {
+                          $total = $row['mid_total'] + $row['assignment_total'] + $row['presentation_total'];
+                          $obt = $row['mid_obtained'] + $row['assignment_obtained'] + $row['presentation_obtained'];
+                          $perc = ($total > 0) ? round(($obt / $total) * 100, 1) : 0;
+                          
+                          // Low performance row highlight (Sir's requirement)
+                          $bg_style = ($perc < 40) ? "class='table-danger'" : "";
+                          
+                          echo "<tr $bg_style>
+                                  <td class='text-start'><strong>" . htmlspecialchars($row['subject_name']) . "</strong></td>
+                                  <td>{$row['mid_total']}</td><td>{$row['mid_obtained']}</td>
+                                  <td>{$row['assignment_total']}</td><td>{$row['assignment_obtained']}</td>
+                                  <td>{$row['presentation_total']}</td><td>{$row['presentation_obtained']}</td>
+                                  <td><span class='badge'>{$perc}%</span></td>
+                                </tr>";
+                      }
+                  } else {
+                      echo "<tr><td colspan='8' class='py-4 text-center'>No academic records found for this semester.</td></tr>";
+                  }
+                  $stmt->close();
+              } else {
+                  echo "<tr><td colspan='8' class='py-4 text-danger'>Database Error: Could not prepare statement.</td></tr>";
               }
               ?>
             </tbody>
@@ -144,17 +97,15 @@ $semester = isset($_GET['semester']) ? $_GET['semester'] : 1;
         </div>
       </div>
 
-      <!-- AI Prediction Link  -->
       <div class="text-center mt-5 mb-5">
         <div class="card p-4 shadow-sm mx-auto" style="border: 2px dashed #D4AF37; max-width: 800px;">
           <h3 class="fw-bold" style="color: #B8860B;">🤖 AI GPA Predictor</h3>
-          <p class="text-muted">Analyze your current marks and predict your final semester result using AI.</p>
+          <p class="text-muted">Predict your results using the Decision Tree Regressor model.</p>
           <a href="ai_prediction.php" class="btn btn-custom px-5">Check My Forecast</a>
         </div>
       </div>
     </div>
   </div>
-  <!-- Content Wrapper End -->
 
   <?php include('includes/footer.php'); ?>
   <?php include('includes/chatbot.php'); ?>

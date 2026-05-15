@@ -9,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
+    // Step 1: Prepared Statement for Security (Sir's Requirement 1.1)
     $sql = "SELECT * FROM students WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -19,17 +20,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $student = $result->fetch_assoc();
 
-        // Not verified
+        // Step 2: Check Verification Status
         if ($student['is_verified'] == 0) {
             $error = "⚠️ You must verify your Gmail before logging in.";
         }
 
-        // Wrong password
-        else if ($student['password'] !== $password) {
+        // Step 3: Hashed Password Verification (Critical Fix) 
+        // password_verify() use karna hai plaintext compare ki jagah
+        else if (!password_verify($password, $student['password'])) {
             $error = "❌ Incorrect password!";
         }
 
-        // Login success
+        // Step 4: Login Success
         else {
             $_SESSION['student_id'] = $student['id'];
             $_SESSION['student_name'] = $student['name'];
@@ -166,12 +168,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <button type="submit" class="btn btn-custom">Login</button>
 
         <div class="text-center mt-3">
-            <small>© 2025 Aspire College | AI-Based Academic Portal</small>
+            <small>© 2025 GC University Faisalabad | AI-Based Academic Portal</small>
         </div>
     </form>
 </div>
 
-<footer>&copy; 2025 Aspire College | AI-Based Academic Portal</footer>
+<footer>&copy; 2025 GC University Faisalabad | AI-Based Academic Portal</footer>
 
 </body>
 </html>

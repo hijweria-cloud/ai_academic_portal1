@@ -198,7 +198,7 @@ if (isset($_GET['delete'])) {
 
 <!-- Footer -->
 <footer>
-  © 2025 Aspire College | AI-Based Academic Portal
+  © 2025 GC University Faisalabad | AI-Based Academic Portal
 </footer>
 
 <?php include('includes/chatbot.php'); ?>

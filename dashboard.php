@@ -258,7 +258,7 @@ if (!isset($_SESSION['student_id'])) {
 </div>
 
 <!-- Footer -->
-<footer>&copy; 2025 Aspire College | AI-Based Academic Portal</footer>
+<footer>&copy; 2025 GC University Faisalabad | AI-Based Academic Portal</footer>
 
 <script>
 const chatbotIcon = document.getElementById('chatbot-icon');

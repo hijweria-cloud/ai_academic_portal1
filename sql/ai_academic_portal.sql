@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 15, 2025 at 07:39 PM
+-- Generation Time: May 15, 2026 at 01:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -53,20 +53,32 @@ CREATE TABLE `marks` (
   `subject_name` varchar(100) NOT NULL,
   `mid_total` int(3) DEFAULT NULL,
   `mid_obtained` int(3) DEFAULT NULL,
+  `g2_obtained` int(3) DEFAULT 0,
   `assignment_total` int(3) DEFAULT NULL,
   `assignment_obtained` int(3) DEFAULT NULL,
   `presentation_total` int(3) DEFAULT NULL,
-  `presentation_obtained` int(3) DEFAULT NULL
+  `presentation_obtained` int(3) DEFAULT NULL,
+  `failures` int(1) DEFAULT 0,
+  `studytime` int(1) DEFAULT 1,
+  `absences` int(3) DEFAULT 0,
+  `activities` varchar(3) DEFAULT 'no',
+  `job` varchar(3) DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `marks`
 --
 
-INSERT INTO `marks` (`id`, `student_id`, `semester`, `subject_name`, `mid_total`, `mid_obtained`, `assignment_total`, `assignment_obtained`, `presentation_total`, `presentation_obtained`) VALUES
-(1, 1, 1, 'Introduction to Programming', 30, 25, 10, 9, 10, 8),
-(2, 1, 1, 'Discrete Mathematics', 30, 20, 10, 7, 10, 9),
-(3, 2, 3, 'Linear Algebra', 30, 26, 10, 10, 10, 9);
+INSERT INTO `marks` (`id`, `student_id`, `semester`, `subject_name`, `mid_total`, `mid_obtained`, `g2_obtained`, `assignment_total`, `assignment_obtained`, `presentation_total`, `presentation_obtained`, `failures`, `studytime`, `absences`, `activities`, `job`) VALUES
+(1, 1, 1, 'Introduction to Programming', 30, 25, 0, 10, 9, 10, 8, 0, 1, 0, 'no', 'no'),
+(2, 1, 1, 'Discrete Mathematics', 30, 20, 0, 10, 7, 10, 9, 0, 1, 0, 'no', 'no'),
+(3, 2, 3, 'Linear Algebra', 30, 10, 0, 10, 0, 10, 5, 0, 1, 0, 'no', 'no'),
+(5, 1, 7, 'Compiler Construction', 30, 22, 0, 10, 8, 10, 9, 0, 1, 2, 'no', 'no'),
+(6, 1, 7, 'Parallel & Distributed Computing', 30, 25, 0, 10, 9, 10, 8, 0, 1, 1, 'no', 'no'),
+(7, 1, 7, 'Software Project Management', 30, 12, 0, 10, 4, 10, 5, 0, 1, 12, 'no', 'no'),
+(8, 16, 7, 'Compiler Construction', 30, 22, 0, 10, 8, 10, 9, 0, 1, 2, 'no', 'no'),
+(9, 16, 7, 'Parallel & Distributed Computing', 30, 25, 0, 10, 9, 10, 8, 0, 1, 1, 'no', 'no'),
+(10, 16, 7, 'Software Project Management', 30, 12, 0, 10, 4, 10, 5, 0, 1, 12, 'no', 'no');
 
 -- --------------------------------------------------------
 
@@ -111,21 +123,25 @@ CREATE TABLE `students` (
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `program` varchar(50) NOT NULL,
-  `semester` int(2) NOT NULL
+  `semester` int(2) NOT NULL,
+  `is_verified` tinyint(1) DEFAULT 0,
+  `verify_token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `email`, `password`, `program`, `semester`) VALUES
-(1, 'Ali Khan', 'ali@example.com', '12345', 'BSCS', 1),
-(2, 'Sara Ahmed', 'sara@example.com', '12345', 'BSMaths', 3),
-(10, 'fatima kayani', 'kayani@gmail.com', '1234567890', 'BSCS', 7),
-(11, 'Alishba Hussain', 'alishba480@gmail.com', '12345678', 'BSCS', 7),
-(12, 'Ramisha khadim', 'ramisha123@example.com', '12345', 'BSCS', 7),
-(13, 'javeria', 'hijweria@gmail.com', '12345', 'BSMaths', 5),
-(14, 'Sana', 'sana@gmail.com', '12345', 'BSCS', 8);
+INSERT INTO `students` (`id`, `name`, `email`, `password`, `program`, `semester`, `is_verified`, `verify_token`) VALUES
+(1, 'Ali Khan', 'ali@example.com', '12345', 'BSCS', 1, 1, NULL),
+(2, 'Sara Ahmed', 'sara@example.com', '12345', 'BSMaths', 3, 1, NULL),
+(10, 'fatima kayani', 'kayani@gmail.com', '1234567890', 'BSCS', 7, 0, NULL),
+(11, 'Alishba Hussain', 'alishba480@gmail.com', '12345678', 'BSCS', 7, 0, NULL),
+(12, 'Ramisha khadim', 'ramisha123@example.com', '12345', 'BSCS', 7, 0, NULL),
+(14, 'Sana', 'sana@gmail.com', '12345', 'BSCS', 8, 0, NULL),
+(15, 'Amina khan', 'amina@gmail.com', '12345', 'BSCS', 7, 0, NULL),
+(16, 'Hijweria', 'hijweria@gmail.com', '12345', 'BSCS', 7, 1, NULL),
+(17, 'mudassarahmed', 'mudassarahmed854@gmail.com', '12345', 'BSMaths', 8, 0, '3a2e30f04236cfa89fad5709dc6e803e');
 
 --
 -- Indexes for dumped tables
@@ -177,7 +193,7 @@ ALTER TABLE `admins`
 -- AUTO_INCREMENT for table `marks`
 --
 ALTER TABLE `marks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `programs`
@@ -195,7 +211,7 @@ ALTER TABLE `semesters`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables

@@ -13,6 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $program = trim($_POST['program']);
     $semester = trim($_POST['semester']);
 
+    // Step 1: PASSWORD HASHING (Sir's Critical Requirement 1.1)
+    // Plain password ko Bcrypt hash mein convert karna
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
     // Check if email already exists
     $check = $conn->prepare("SELECT id FROM students WHERE email = ?");
     $check->bind_param("s", $email);
@@ -26,12 +30,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Generate email verification token
         $token = bin2hex(random_bytes(16));
 
-        // Insert student
-        $sql = "INSERT INTO students (name, email, password, program, semester, verify_token, is_verified)
-                VALUES (?, ?, ?, ?, ?, ?, 0)";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssis", $name, $email, $password, $program, $semester, $token);
+       // Step 1: Query mein 7 columns aur 7 placeholders hain
+$sql = "INSERT INTO students (name, email, password, program, semester, verify_token, is_verified) 
+        VALUES (?, ?, ?, ?, ?, ?, 0)";
+$stmt = $conn->prepare($sql);
 
+// Step 2: Types string mein bhi 7 characters hone chahiye:
+// s = name, s = email, s = password, s = program, i = semester, s = token
+$stmt->bind_param("ssssis", $name, $email, $hashed_password, $program, $semester, $token);
         if ($stmt->execute()) {
             // Send email
             sendVerificationEmail($email, $token, $name);
@@ -197,7 +203,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <footer>
-    © 2025 Aspire College | AI-Based Academic Portal
+    © 2025 GC University Faisalabad | AI-Based Academic Portal
 </footer>
 
 </body>
