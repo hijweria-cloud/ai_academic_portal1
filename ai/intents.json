@@ -2,18 +2,46 @@
   "intents": [
     {
       "tag": "greeting",
-      "patterns": ["Hi", "Hey", "Hello", "Good morning", "Good evening"],
-      "responses": ["Hello! How can I assist you today?", "Hi there! What can I do for you?"]
+      "patterns": ["Hi", "Hey", "Hello", "Good morning", "Good evening", "Salam", "Aoa"],
+      "responses": [
+        "Hello! How can I assist you today?", 
+        "Hi there! Welcome to the AI Academic Portal. What can I do for you?",
+        "Walaikum Assalam! How can I help you with your studies today?"
+      ]
     },
     {
       "tag": "goodbye",
-      "patterns": ["Bye", "See you later", "Goodbye", "I have to go"],
-      "responses": ["Goodbye! Have a nice day!", "See you soon!"]
+      "patterns": ["Bye", "See you later", "Goodbye", "I have to go", "Allah hafiz", "Take care"],
+      "responses": [
+        "Goodbye! Have a nice day!", 
+        "See you soon! Don't forget to check your dashboard regularly.",
+        "Allah Hafiz! Best of luck with your academic goals!"
+      ]
     },
     {
       "tag": "thanks",
-      "patterns": ["Thanks", "Thank you", "That's helpful", "Thanks a lot"],
-      "responses": ["You're welcome!", "No problem!", "Happy to help!"]
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Thanks a lot", "JazakAllah"],
+      "responses": ["You're welcome!", "No problem!", "Happy to help!", "Anytime! I'm here for you."]
+    },
+    {
+      "tag": "agreement",
+      "patterns": ["Ok", "Okay", "Got it", "Fine", "Sure", "Understood", "K"],
+      "responses": [
+        "Great! Let me know if you need anything else.",
+        "Perfect. I'm glad we're on the same page.",
+        "Awesome! Is there anything else I can help you with?",
+        "Right. Let's move forward then!"
+      ]
+    },
+    {
+      "tag": "appreciation",
+      "patterns": ["Wow", "Cool", "Nice", "Great", "Excellent", "Interesting"],
+      "responses": [
+        "I'm glad you think so!",
+        "Yes, we aim to make academics easier for you.",
+        "Indeed! Our AI portal is designed to be smart and helpful.",
+        "Glad you liked it!"
+      ]
     },
     {
       "tag": "portal_info",
@@ -24,8 +52,8 @@
         "Purpose of this site"
       ],
       "responses": [
-        "This is an AI-Based Academic Portal designed for BS-level students to view results, subjects, and semester details.",
-        "The portal helps students and admins manage academic data efficiently with AI assistance."
+        "This is an AI-Based Academic Portal designed for students to view results, subjects, and manage their academic journey with AI assistance.",
+        "The portal helps students and admins manage academic data efficiently using advanced prediction and chat features."
       ]
     },
     {
@@ -34,11 +62,39 @@
         "How can I check my marks?",
         "Show my results",
         "Where can I see my grades?",
-        "How to view my semester result?"
+        "How to view my semester result?",
+        "Percentage check"
       ],
       "responses": [
         "Go to your dashboard and select your semester to view marks and grades.",
-        "Click on your program and semester card to view your results and percentage."
+        "Click on your program and semester card to view your results and percentage instantly."
+      ]
+    },
+    {
+      "tag": "password_issue",
+      "patterns": [
+        "I forgot my password",
+        "Cannot login",
+        "Reset password",
+        "Login issues",
+        "Account locked"
+      ],
+      "responses": [
+        "If you forgot your password, please use the 'Forgot Password' link on the login page to reset it via email.",
+        "Ensure your credentials are correct. If the issue persists, contact the admin office."
+      ]
+    },
+    {
+      "tag": "subjects_info",
+      "patterns": [
+        "What are my subjects?",
+        "Subject list",
+        "Course details",
+        "What am I studying this semester?"
+      ],
+      "responses": [
+        "You can find your registered subjects in the 'Courses' or 'Semester Details' section of your student dashboard.",
+        "The dashboard displays all subjects for your current semester along with credit hours."
       ]
     },
     {
@@ -50,7 +106,7 @@
         "Admin access"
       ],
       "responses": [
-        "Admins can edit student data and marks through the Admin Panel using their login credentials.",
+        "Admins can edit student data and marks through the Admin Panel using their secure credentials.",
         "If you are an admin, log in and navigate to 'Manage Students' or 'Manage Marks' to update records."
       ]
     },
@@ -60,12 +116,13 @@
         "I am tired",
         "I am stressed",
         "I feel demotivated",
-        "I can’t study"
+        "I can’t study",
+        "Exam pressure"
       ],
       "responses": [
-        "Take a short break and come back stronger — you’ve got this! 💪",
+        "Take a short break, drink some water, and come back stronger — you’ve got this! 💪",
         "Don’t give up, you’re doing great. Every small step counts!",
-        "Remember why you started — success takes effort and patience."
+        "Remember why you started. Success takes effort, and I'm here to support you."
       ]
     },
     {
@@ -73,11 +130,25 @@
       "patterns": [
         "How does AI work here?",
         "What AI features are in this portal?",
-        "How do you use AI?"
+        "How do you use AI?",
+        "Is this chatbot AI?"
       ],
       "responses": [
-        "This portal uses AI for chat assistance, result prediction, and automated warnings.",
-        "AI helps analyze student data and interact through this chatbot."
+        "This portal uses AI for chat assistance, result prediction, and automated academic warnings.",
+        "AI helps analyze student performance data and provides guidance through this very chatbot."
+      ]
+    },
+    {
+      "tag": "bot_identity",
+      "patterns": [
+        "Who are you?",
+        "What is your name?",
+        "Are you a human?",
+        "Who created you?"
+      ],
+      "responses": [
+        "I am the AI Assistant for the AI Academic Portal, created to help you manage your studies.",
+        "I'm your virtual academic counselor. You can call me the Portal Assistant!"
       ]
     }
   ]
