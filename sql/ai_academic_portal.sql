@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2026 at 01:08 PM
+-- Generation Time: May 23, 2026 at 06:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `password`) VALUES
-(1, 'admin', 'admin123');
+(3, 'admin', '$2y$10$Uo7zWvE1P7XpB1n2n7M9eO6KxP9iXw7uHw8yY2a5z7b1c3d4e5f6g');
 
 -- --------------------------------------------------------
 
@@ -75,10 +75,7 @@ INSERT INTO `marks` (`id`, `student_id`, `semester`, `subject_name`, `mid_total`
 (3, 2, 3, 'Linear Algebra', 30, 10, 0, 10, 0, 10, 5, 0, 1, 0, 'no', 'no'),
 (5, 1, 7, 'Compiler Construction', 30, 22, 0, 10, 8, 10, 9, 0, 1, 2, 'no', 'no'),
 (6, 1, 7, 'Parallel & Distributed Computing', 30, 25, 0, 10, 9, 10, 8, 0, 1, 1, 'no', 'no'),
-(7, 1, 7, 'Software Project Management', 30, 12, 0, 10, 4, 10, 5, 0, 1, 12, 'no', 'no'),
-(8, 16, 7, 'Compiler Construction', 30, 22, 0, 10, 8, 10, 9, 0, 1, 2, 'no', 'no'),
-(9, 16, 7, 'Parallel & Distributed Computing', 30, 25, 0, 10, 9, 10, 8, 0, 1, 1, 'no', 'no'),
-(10, 16, 7, 'Software Project Management', 30, 12, 0, 10, 4, 10, 5, 0, 1, 12, 'no', 'no');
+(7, 1, 7, 'Software Project Management', 30, 12, 0, 10, 4, 10, 5, 0, 1, 12, 'no', 'no');
 
 -- --------------------------------------------------------
 
@@ -140,8 +137,11 @@ INSERT INTO `students` (`id`, `name`, `email`, `password`, `program`, `semester`
 (12, 'Ramisha khadim', 'ramisha123@example.com', '12345', 'BSCS', 7, 0, NULL),
 (14, 'Sana', 'sana@gmail.com', '12345', 'BSCS', 8, 0, NULL),
 (15, 'Amina khan', 'amina@gmail.com', '12345', 'BSCS', 7, 0, NULL),
-(16, 'Hijweria', 'hijweria@gmail.com', '12345', 'BSCS', 7, 1, NULL),
-(17, 'mudassarahmed', 'mudassarahmed854@gmail.com', '12345', 'BSMaths', 8, 0, '3a2e30f04236cfa89fad5709dc6e803e');
+(17, 'mudassarahmed', 'mudassarahmed854@gmail.com', '12345', 'BSMaths', 8, 0, '3a2e30f04236cfa89fad5709dc6e803e'),
+(27, 'saba', 'sabaahmed123456787@gmail.com', '$2y$10$Qc5ifM/84bqdvMtXAYl1p.UGxFV9TkCQ.EZGIKDudEaQSCj4Pry72', 'BSMaths', 5, 0, '5a5720f1004299744a32d025343a0ea4'),
+(28, 'javeria', 'j12789190@gmail.com', '$2y$10$uu3DVz7Wv8LcT3nNrTlKmuDdCgMA0/Un430ADybsA.ivs7NtJvIdS', 'BSCS', 7, 0, '04d286e14c9c0764ce8fbca1cf5bd822'),
+(30, 'javeria', 'hijweria@gmail.com', '$2y$10$SNRly7JgXllapTWbXRqbxO1FOaa8whdcYrZiAhGsiY5PBC3gcwTCG', 'BSCS', 8, 1, NULL),
+(31, 'Junaid', 'junaidjattoishere@gmail.com', '$2y$10$WtxELz5yLxPMeD2II50N7uXWbZAXNOVNfG/9YzOlHuO69830UYEoC', 'BSCS', 1, 0, NULL);
 
 --
 -- Indexes for dumped tables
@@ -187,7 +187,7 @@ ALTER TABLE `students`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `marks`
@@ -211,7 +211,7 @@ ALTER TABLE `semesters`
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Constraints for dumped tables

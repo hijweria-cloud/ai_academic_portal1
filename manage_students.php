@@ -7,16 +7,19 @@ if (!isset($_SESSION['admin_email'])) {
     exit();
 }
 
-// Add student
+// Add student with proper password hashing (Sir's Requirement)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
     $program = trim($_POST['program']);
     $semester = (int)$_POST['semester'];
+    
+    // Hardcoded default fallback plaintext converted to dynamic Bcrypt hash
     $default_password = '12345';
+    $hashed_password = password_hash($default_password, PASSWORD_BCRYPT);
 
     $stmt = $conn->prepare("INSERT INTO students (name, email, password, program, semester) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssi", $name, $email, $default_password, $program, $semester);
+    $stmt->bind_param("ssssi", $name, $email, $hashed_password, $program, $semester);
     $stmt->execute();
     $stmt->close();
 
@@ -43,7 +46,7 @@ if (isset($_GET['delete'])) {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
+ <style>
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #F5EBDD, #F3E2C7);
@@ -80,19 +83,25 @@ if (isset($_GET['delete'])) {
       text-align: left;
     }
 
+    /* Fixed Premium Golden Styling for the Add Button */
     .btn-custom {
-      background-color: #D4AF37;
-      color: #1C1C1C;
-      border: none;
+      background-color: #D4AF37 !important; /* Enforces bright golden profile color */
+      color: #1C1C1C !important;            /* High contrast dark text */
+      border: 1px solid #B9962F !important;
       border-radius: 6px;
       font-weight: 600;
       padding: 6px 12px;
       font-size: 14px;
-      transition: 0.3s;
+      transition: all 0.3s ease;
     }
+    
+    /* Interactive Hover State for User Feedback */
     .btn-custom:hover {
-      background-color: #B9962F;
-      color: #fff;
+      background-color: #1C1C1C !important; /* Smoothly transitions to premium dark look */
+      color: #D4AF37 !important;            /* Font flips to glowing gold */
+      border-color: #D4AF37 !important;
+      transform: translateY(-1px);          /* Clean interactive elevation lift */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
 
     .table {
@@ -117,11 +126,6 @@ if (isset($_GET['delete'])) {
       background-color: #F9F3E7;
     }
 
-    .small {
-      font-size: 13px;
-      color: #666;
-    }
-
     footer {
       background-color: #1C1C1C;
       color:  #D4AF37;
@@ -130,14 +134,12 @@ if (isset($_GET['delete'])) {
       margin-top: auto;
       font-size: 0.85rem;
     }
-  </style>
+</style>
 </head>
 <body>
 
-<!-- Include Navbar from header.php -->
 <?php include('includes/header.php'); ?>
 
-<!-- Main Content -->
 <div class="container-main">
   <h3>Manage Students</h3>
 
@@ -161,9 +163,6 @@ if (isset($_GET['delete'])) {
         <button name="add_student" class="btn btn-custom w-100">Add</button>
       </div>
     </form>
-    <div class="small mt-1">
-      Default password for new students: <strong>12345</strong>
-    </div>
   </div>
 
   <div class="table-responsive">
@@ -201,7 +200,7 @@ if (isset($_GET['delete'])) {
 </div>
 
 <footer>
-  <p>&copy; <?php echo date('Y'); ?> AI Academic Portal. All Rights Reserved.</p>
+    © 2025 GC University Faisalabad | AI-Based Academic Portal
 </footer>
 <?php include('includes/chatbot.php'); ?>
 
