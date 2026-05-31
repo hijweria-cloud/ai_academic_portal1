@@ -1,13 +1,13 @@
 <?php 
 session_start();
-include('includes/db_connect.php'); // Step 1: Database connection include ki
+include('includes/db_connect.php'); // Step 1: Database connection include
 
 if (!isset($_SESSION['admin_email'])) {
     header("Location: admin_login.php");
     exit();
 }
 
-// Step 2: Fetch Real-time stats for Sir's review requirement
+// Step 2: Fetch Real-time stats 
 $student_count = $conn->query("SELECT COUNT(*) as total FROM students")->fetch_assoc()['total'];
 $program_count = $conn->query("SELECT COUNT(*) as total FROM programs")->fetch_assoc()['total']; // Ensure 'programs' table exists
 $marks_count = $conn->query("SELECT COUNT(*) as total FROM marks")->fetch_assoc()['total'];
@@ -39,6 +39,7 @@ $marks_count = $conn->query("SELECT COUNT(*) as total FROM marks")->fetch_assoc(
         .btn-custom:hover { background-color: #1C1C1C; color: #D4AF37; }
         footer { background: #1C1C1C; text-align: center; padding: 20px; color: #D4AF37; }
     </style>
+    
 </head>
 
 <body>
@@ -102,6 +103,7 @@ $marks_count = $conn->query("SELECT COUNT(*) as total FROM marks")->fetch_assoc(
 
     <footer>© 2026 GC University Faisalabad | AI-Based Academic Portal</footer>
 
-    <div id="chatbot-icon" style="position:fixed; bottom:25px; right:25px; width:60px; height:60px; background:#1C1C1C; border-radius:50%; display:flex; justify-content:center; align-items:center; cursor:pointer; color:#D4AF37; font-size:24px; box-shadow:0 4px 10px rgba(0,0,0,0.3);">💬</div>
+    
+    <?php include('includes/chatbot.php'); ?>
 </body>
 </html>

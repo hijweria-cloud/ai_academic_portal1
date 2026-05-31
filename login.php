@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Step 1: Prepared Statement for Security (Sir's Requirement 1.1)
+    // Step 1: Prepared Statement for Security 
     $sql = "SELECT * FROM students WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -25,8 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "⚠️ You must verify your Gmail before logging in.";
         }
 
-        // Step 3: Hashed Password Verification (Critical Fix) 
-        // password_verify() use karna hai plaintext compare ki jagah
+        // Step 3: Hashed Password Verification 
+        //using password_verify() instead of plain text
         else if (!password_verify($password, $student['password'])) {
             $error = "❌ Incorrect password!";
         }

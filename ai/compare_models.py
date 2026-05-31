@@ -14,7 +14,7 @@ import joblib
 
 try:
     df = pd.read_csv('student-mat.csv')
-    if len(df.columns) < 2:  # Agar columns sahi divide nahi huye
+    if len(df.columns) < 2:  
         df = pd.read_csv('student-mat.csv', sep=';')
 except Exception as e:
     print(f"Error loading file: {e}")

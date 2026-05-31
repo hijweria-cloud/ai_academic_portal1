@@ -1,10 +1,10 @@
 <?php
-// 1. Session aur Database connection sab se upar
+// 1. Session aur Database connection 
 session_start();
 include('includes/db_connect.php'); 
 include('includes/header.php');
 
-// 2. SECURITY FIX: Semester ko integer mein badalna (Reflected XSS se bachne ke liye)
+
 $semester = isset($_GET['semester']) ? (int)$_GET['semester'] : 1;
 $student_id = isset($_SESSION['student_id']) ? $_SESSION['student_id'] : 0;
 ?>
@@ -58,7 +58,7 @@ $student_id = isset($_SESSION['student_id']) ? $_SESSION['student_id'] : 0;
             </thead>
             <tbody class="text-center">
               <?php
-              // 3. DATABASE FETCH: Hard-coded array khatam, ab asli data aayega
+              // 3. DATABASE FETCH
               $sql = "SELECT subject_name, mid_total, mid_obtained, assignment_total, assignment_obtained, presentation_total, presentation_obtained FROM marks WHERE student_id = ? AND semester = ?";
               $stmt = $conn->prepare($sql);
               
@@ -73,7 +73,7 @@ $student_id = isset($_SESSION['student_id']) ? $_SESSION['student_id'] : 0;
                           $obt = $row['mid_obtained'] + $row['assignment_obtained'] + $row['presentation_obtained'];
                           $perc = ($total > 0) ? round(($obt / $total) * 100, 1) : 0;
                           
-                          // Low performance row highlight (Sir's requirement)
+                          // Low performance row highlight 
                           $bg_style = ($perc < 40) ? "class='table-danger'" : "";
                           
                           echo "<tr $bg_style>

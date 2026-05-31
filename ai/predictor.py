@@ -34,13 +34,13 @@ def predict_grade():
         # Generate Prediction
         prediction = model.predict([input_data])[0]
         
-        # Convert result to 4.0 GPA scale (Input distribution is 0-20) [cite: 52]
+        # Convert result to 4.0 GPA scale (Input distribution is 0-20)
         predicted_gpa = round((prediction / 20) * 4, 2)
         
         # Clamp GPA between 0.0 and 4.0
         predicted_gpa = max(0.0, min(4.0, predicted_gpa))
         
-        # --- NEW FEATURE: Weak Performance Identification (Review Fix §1.1) --- 
+        #  Weak Performance Identification 
         # Flagging weak performance if marks are below 40% (8 out of 20)
         weak_areas = []
         if g1 < 8:

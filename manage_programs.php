@@ -40,10 +40,16 @@ if (isset($_GET['delete'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
-    body {
+    /* Sticky Footer Logic Layout */
+    html, body {
+      height: 100%;
       margin: 0;
       padding: 0;
-      min-height: 100vh;
+    }
+    
+    body {
+      display: flex;
+      flex-direction: column;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #F5EBDD, #F3E2C7);
       color: #1C1C1C;
@@ -59,6 +65,7 @@ if (isset($_GET['delete'])) {
       display: flex;
       align-items: center;
       z-index: 2;
+      flex-shrink: 0;
     }
 
     .navbar .navbar-brand {
@@ -81,13 +88,11 @@ if (isset($_GET['delete'])) {
       color: #D4AF37 !important;
     }
 
-    /* Container and title */
-    .container {
-      position: relative;
-      z-index: 1;
-      padding-top: 80px;
-      padding-bottom: 60px;
-      animation: fadeIn 0.8s ease-in-out;
+    /* Container wraps active height dynamically */
+    .content-wrapper {
+      flex: 1 0 auto; /* Ensures this area expands to push footer down */
+      padding-top: 40px;
+      padding-bottom: 40px;
     }
 
     h3 {
@@ -159,11 +164,15 @@ if (isset($_GET['delete'])) {
         transform: translateY(0);
       }
     }
+    
+    /* Sticky bottom footer constraints */
+    footer {
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar">
   <div class="container-fluid d-flex justify-content-between align-items-center">
     <a class="navbar-brand" href="admin_dashboard.php">AI Academic Portal</a>
@@ -173,59 +182,60 @@ if (isset($_GET['delete'])) {
   </div>
 </nav>
 
-<!-- Main Content -->
-<div class="container">
-  <h3>Manage Programs</h3>
+<div class="content-wrapper">
+  <div class="container" style="animation: fadeIn 0.8s ease-in-out;">
+    <h3>Manage Programs</h3>
 
-  <div class="card p-3 mb-4 mt-4">
-    <form method="POST" class="row g-2 align-items-center">
-      <div class="col-md-5">
-        <input name="program_name" class="form-control" placeholder="Program name (e.g. BS Computer Science)" required>
-      </div>
-      <div class="col-md-5">
-        <input name="description" class="form-control" placeholder="Short description (optional)">
-      </div>
-      <div class="col-md-2">
-        <button name="add_program" class="btn btn-custom w-100">Add</button>
-      </div>
-    </form>
-  </div>
+    <div class="card p-3 mb-4 mt-4">
+      <form method="POST" class="row g-2 align-items-center">
+        <div class="col-md-5">
+          <input name="program_name" class="form-control" placeholder="Program name (e.g. BS Computer Science)" required>
+        </div>
+        <div class="col-md-5">
+          <input name="description" class="form-control" placeholder="Short description (optional)">
+        </div>
+        <div class="col-md-2">
+          <button name="add_program" class="btn btn-custom w-100">Add</button>
+        </div>
+      </form>
+    </div>
 
-  <div class="table-responsive">
-    <table class="table table-bordered align-middle text-center">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Program Name</th>
-          <th>Description</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-          $res = $conn->query("SELECT id, program_name, description FROM programs ORDER BY id DESC");
-          if ($res && $res->num_rows > 0) {
-            while ($r = $res->fetch_assoc()) {
-              echo "<tr>
-                      <td>{$r['id']}</td>
-                      <td>".htmlspecialchars($r['program_name'])."</td>
-                      <td>".htmlspecialchars($r['description'])."</td>
-                      <td>
-                        <a class='btn btn-sm btn-danger' href='manage_programs.php?delete={$r['id']}' onclick=\"return confirm('Delete this program?')\">Delete</a>
-                      </td>
-                    </tr>";
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle text-center">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Program Name</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            $res = $conn->query("SELECT id, program_name, description FROM programs ORDER BY id DESC");
+            if ($res && $res->num_rows > 0) {
+              while ($r = $res->fetch_assoc()) {
+                echo "<tr>
+                        <td>{$r['id']}</td>
+                        <td>".htmlspecialchars($r['program_name'])."</td>
+                        <td>".htmlspecialchars($r['description'])."</td>
+                        <td>
+                          <a class='btn btn-sm btn-danger' href='manage_programs.php?delete={$r['id']}' onclick=\"return confirm('Delete this program?')\">Delete</a>
+                        </td>
+                      </tr>";
+              }
+            } else {
+              echo "<tr><td colspan='4'>No programs found.</td></tr>";
             }
-          } else {
-            echo "<tr><td colspan='4'>No programs found.</td></tr>";
-          }
-        ?>
-      </tbody>
-    </table>
+          ?>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
-  <?php include('includes/footer.php'); ?>
-  <?php include('includes/chatbot.php'); ?>
+<?php include('includes/footer.php'); ?>
+<?php include('includes/chatbot.php'); ?>
 
 </body>
 </html>

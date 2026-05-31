@@ -21,7 +21,7 @@ $stmt_db->execute();
 $res = $stmt_db->get_result();
 $db_data = $res->fetch_assoc();
 
-// Default values set karna agar database empty ho
+// Default values set if database is empty 
 $default_g1 = $db_data['mid_obtained'] ?? 0;
 $default_absences = $db_data['absences'] ?? 0;
 

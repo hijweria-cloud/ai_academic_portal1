@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_email'])) {
     exit();
 }
 
-// Add student with proper password hashing (Sir's Requirement)
+// Add student with proper password hashing 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);

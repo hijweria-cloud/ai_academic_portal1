@@ -126,4 +126,4 @@ function sendVerificationEmail($email, $token, $name) {
     }
 }
 ?>
-```
+

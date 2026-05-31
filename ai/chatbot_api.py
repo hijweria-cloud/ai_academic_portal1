@@ -44,7 +44,7 @@ def get_gemini_response(user_message):
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
         headers = {'Content-Type': 'application/json'}
 
-         prompt = f"""
+        prompt = f"""
 You are an AI assistant for the "AI Academic Portal".
 
 Your role:
